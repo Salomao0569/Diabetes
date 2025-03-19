@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultório de Diabetes</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #c0392b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        
+        .content {
+            flex: 3;
+            min-width: 300px;
+        }
+        
+        .search-container {
+            margin-bottom: 1rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .class-filter {
+            margin-bottom: 1.5rem;
+        }
+        
+        .class-filter h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .class-filter ul {
+            list-style: none;
+        }
+        
+        .class-filter li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .class-filter label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .class-filter input {
+            margin-right: 0.5rem;
+        }
+        
+        .medication-class {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .class-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .class-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        
+        .class-body {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .class-body.active {
+            max-height: 5000px;
+            padding: 1rem;
+        }
+        
+        .medication {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .medication-header {
+            background-color: var(--light-color);
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .medication-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+        
+        .medication-body {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .medication-body.active {
+            max-height: 2000px;
+            padding: 1rem;
+        }
+        
+        .medication-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .medication-info {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .info-section {
+            margin-bottom: 1rem;
+        }
+        
+        .info-section h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.25rem;
+        }
+        
+        .info-section ul {
+            padding-left: 1.5rem;
+        }
+        
+        .info-section li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .btn-toggle {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .highlight {
+            background-color: #ffeaa7;
+        }
+        
+        #no-results {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Consultório de Diabetes</h1>
+        <p style="color: #ecf0f1; margin-top: 5px; font-size: 0.9rem;">Guia completo de medicamentos para tratamento do diabetes</p>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="sidebar">
+                <div class="search-container">
+                    <input type="text" id="search" class="search-input" placeholder="Buscar medicamentos...">
+                </div>
+                
+                <div class="class-filter">
+                    <h3>Filtrar por Classe</h3>
+                    <ul id="class-list">
+                        <li>
+                            <label>
+                                <input type="checkbox" value="all" checked> Todas as Classes
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="biguanida" checked> Biguanidas
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="sulfonilureia" checked> Sulfonilureias
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="iSGLT2" checked> Inibidores do SGLT2
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="glp1" checked> Agonistas do Receptor GLP-1
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="dpp4" checked> Inibidores da DPP-IV
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="insulina" checked> Insulinas
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="associacoes" checked> Associações Medicamentosas
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" value="combos-clinicos" checked> Combinações Clínicas
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div id="no-results">
+                    <h3>Nenhum medicamento encontrado para a sua busca</h3>
+                    <p>Tente outros termos ou remova os filtros aplicados</p>
+                </div>
+                
+                <!-- Biguanidas -->
+                <div class="medication-class" data-class="biguanida">
+                    <div class="class-header">
+                        <h2>Biguanidas</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Metformina</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Glifage®, Glifage XR®, Glucoformin®</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>500 a 2.000 mg/dia (crianças) e 500 a 2.550 mg/dia (adultos)</p>
+                                        <p>Dose inicial: 500 mg, 1 a 3 vezes ao dia</p>
+                                        
+                                        <h4>Mecanismo de Ação</h4>
+                                        <ul>
+                                            <li>Aumenta sensibilidade insulínica no fígado, reduzindo a produção hepática de glicose</li>
+                                            <li>Aumenta a captação muscular de glicose (ativação da AMPK)</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução estimada de glicemia de jejum 60-70 mg/dL e HbA1c 1,5-2,0%</li>
+                                            <li>Potencialmente pode reduzir eventos cardiovasculares</li>
+                                            <li>Previne progressão para DM2</li>
+                                            <li>Melhora perfil lipídico</li>
+                                            <li>Não causa ganho de peso</li>
+                                            <li>Baixo custo</li>
+                                        </ul>
+                                        
+                                        <h4>Efeitos Adversos</h4>
+                                        <ul>
+                                            <li>Sintomas gastrointestinais (diarreia, náusea, anorexia, gosto metálico)</li>
+                                            <li>Deficiência de vitamina B12</li>
+                                            <li>Acidose lática (rara)</li>
+                                        </ul>
+                                        
+                                        <h4>Contraindicações</h4>
+                                        <ul>
+                                            <li>Insuficiência respiratória grave</li>
+                                            <li>Insuficiência cardíaca congestiva (classe IV)</li>
+                                            <li>Doença hepática grave</li>
+                                            <li>Infecção grave</li>
+                                            <li>TFG <30 mL/min/1,73 m²</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sulfonilureias -->
+                <div class="medication-class" data-class="sulfonilureia">
+                    <div class="class-header">
+                        <h2>Sulfonilureias</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Glibenclamida</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Daonil®</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>2,5 a 20 mg/dia – 1-2x/dia</p>
+                                        
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Estimula a secreção de insulina pelas células beta pancreáticas, por meio da ligação no receptor SUR-1 (aumenta influxo de Ca → aumenta liberação de insulina)</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução de glicemia de jejum: 60-70 mg/dL e HbA1c: 1,5%-2,0%</li>
+                                            <li>Redução do risco de complicações microvasculares</li>
+                                            <li>Maior potência na redução da HbA1C</li>
+                                            <li>Baixo custo</li>
+                                        </ul>
+                                        
+                                        <h4>Efeitos Adversos</h4>
+                                        <ul>
+                                            <li>Hipoglicemia (maior risco entre as sulfonilureias)</li>
+                                            <li>Ganho de peso</li>
+                                        </ul>
+                                        
+                                        <h4>Contraindicações</h4>
+                                        <ul>
+                                            <li>Taxa de Filtração Glomerular <30 mL/min/1,73 m²</li>
+                                            <li>Insuficiência hepática</li>
+                                            <li>DM com deficiência grave de insulina</li>
+                                            <li>Infecções graves</li>
+                                            <li>Gestação</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Gliclazida</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Diamicron MR®, Azucreatil®, Diamicron®, Gliconil®, Gluconorm®</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Diamicron MR® 30mg e 60mg (liberação modificada)</li>
+                                            <li>Gliclazida convencional 80mg</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>Liberação modificada (MR): 30 a 120 mg/dia – 1x/dia</p>
+                                        <p>Convencional: 80 a 320 mg/dia – dividida em 2-3x/dia</p>
+                                        
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Estimula a secreção de insulina pelas células beta pancreáticas, por meio da ligação no receptor SUR-1. A gliclazida tem perfil de interação mais específico e reversível com o receptor SUR-1, o que explica seu menor risco de hipoglicemia.</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução de glicemia de jejum: 60-70 mg/dL e HbA1c: 1,5%-2,0%</li>
+                                            <li>Redução do risco de complicações microvasculares</li>
+                                            <li>Menor risco de hipoglicemia que a glibenclamida</li>
+                                            <li>Segurança cardiovascular estabelecida (estudo ADVANCE)</li>
+                                            <li>Proteção vascular adicional e redução do estresse oxidativo</li>
+                                            <li>A forma MR permite dose única diária e melhor controle glicêmico nas 24h</li>
+                                            <li>Sulfonilureia de escolha nas diretrizes da Sociedade Brasileira de Diabetes</li>
+                                            <li>Melhor perfil de segurança em idosos</li>
+                                            <li>Pode ser utilizada em insuficiência renal leve a moderada (TFG >30mL/min)</li>
+                                        </ul>
+                                        
+                                        <h4>Efeitos Adversos</h4>
+                                        <ul>
+                                            <li>Hipoglicemia (menos frequente que glibenclamida)</li>
+                                            <li>Ganho de peso (geralmente menor que com outras sulfonilureias)</li>
+                                            <li>Reações cutâneas (raras)</li>
+                                            <li>Distúrbios gastrointestinais (raros)</li>
+                                        </ul>
+                                        
+                                        <h4>Contraindicações</h4>
+                                        <ul>
+                                            <li>Taxa de Filtração Glomerular <30 mL/min/1,73 m²</li>
+                                            <li>Insuficiência hepática grave</li>
+                                            <li>DM com deficiência grave de insulina</li>
+                                            <li>Infecções graves</li>
+                                            <li>Gestação e lactação</li>
+                                            <li>Porfiria</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Glimepirida</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Amaryl®, Glimepil®, Betes®</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <p>Comprimidos de 1mg, 2mg, 3mg, 4mg e 6mg</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 a 8 mg/dia – 1x/dia, antes do café da manhã ou da primeira refeição principal</p>
+                                        <p>Dose inicial: 1-2mg, com ajuste gradual a cada 1-2 semanas</p>
+                                        
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Estimula a secreção de insulina pelas células beta pancreáticas, por meio da ligação no receptor SUR-1. Além disso, apresenta efeitos extrapancreáticos moderados como aumento da sensibilidade à insulina em tecidos periféricos.</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução de glicemia de jejum: 60-70 mg/dL e HbA1c: 1,5%-2,0%</li>
+                                            <li>Administração em dose única diária</li>
+                                            <li>Menor risco de hipoglicemia que a glibenclamida</li>
+                                            <li>Menor ganho de peso que outras sulfonilureias</li>
+                                            <li>Efeitos sensibilizadores de insulina em tecidos periféricos</li>
+                                            <li>Baixo custo</li>
+                                        </ul>
+                                        
+                                        <h4>Efeitos Adversos</h4>
+                                        <ul>
+                                            <li>Hipoglicemia (menos frequente que glibenclamida)</li>
+                                            <li>Ganho de peso (geralmente modesto)</li>
+                                            <li>Reações alérgicas cutâneas (raras)</li>
+                                            <li>Distúrbios gastrointestinais (raros)</li>
+                                        </ul>
+                                        
+                                        <h4>Contraindicações</h4>
+                                        <ul>
+                                            <li>Taxa de Filtração Glomerular <30 mL/min/1,73 m²</li>
+                                            <li>Insuficiência hepática grave</li>
+                                            <li>DM com deficiência grave de insulina</li>
+                                            <li>Gestação e lactação</li>
+                                        </ul>
+                                        
+                                        <h4>Considerações Especiais</h4>
+                                        <p>A glimepirida tem uma ligação mais rápida e de menor duração com o receptor SUR-1 quando comparada à glibenclamida, o que contribui para seu menor risco de hipoglicemia prolongada. Pode ser usada com maior segurança em idosos e em pacientes com fatores de risco para hipoglicemia.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Inibidores do SGLT2 -->
+                <div class="medication-class" data-class="iSGLT2">
+                    <div class="class-header">
+                        <h2>Inibidores do SGLT2</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Dapagliflozina</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Forxiga®</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>10 mg – 1x/dia</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução estimada da glicemia de jejum: 30 mg/dL e HbA1C: 0,5%-1,0%</li>
+                                            <li>Redução de eventos cardiovasculares</li>
+                                            <li>Redução de internação por Insuficiência Cardíaca</li>
+                                            <li>Redução discreta de peso</li>
+                                        </ul>
+                                        
+                                        <h4>Efeitos Adversos</h4>
+                                        <ul>
+                                            <li>Infecção do trato geniturinário</li>
+                                            <li>Cetoacidose euglicêmica (rara)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Empagliflozina</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Jardiance®</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>10 a 25 mg – 1x/dia</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução estimada da glicemia de jejum: 30 mg/dL e HbA1C: 0,5%-1,0%</li>
+                                            <li>Redução da mortalidade cardiovascular</li>
+                                            <li>Redução de internação por Insuficiência Cardíaca</li>
+                                            <li>Redução discreta de peso</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Agonistas do Receptor GLP-1 -->
+                <div class="medication-class" data-class="glp1">
+                    <div class="class-header">
+                        <h2>Agonistas do Receptor GLP-1</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Liraglutida</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Victoza®, Saxenda®</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>0,6mg, 1,2mg e 1,8mg / dia</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução significativa de peso corporal</li>
+                                            <li>Redução de HbA1c em 0,8-1,5%</li>
+                                            <li>Raramente causa hipoglicemia</li>
+                                        </ul>
+                                        
+                                        <h4>Efeitos Adversos</h4>
+                                        <ul>
+                                            <li>Náusea, vômitos e diarreia</li>
+                                            <li>Pancreatite aguda (raro)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Semaglutida</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Ozempic® (injetável), Rybelsus® (oral)</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>0,25mg a 1mg 1x semana (Ozempic)</p>
+                                        <p>3mg, 7mg, 14mg 1x dia (Rybelsus)</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Maior redução de peso que outros GLP-1</li>
+                                            <li>Aplicação semanal (Ozempic) ou oral (Rybelsus)</li>
+                                            <li>Redução de eventos cardiovasculares</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Inibidores da DPP-IV -->
+                <div class="medication-class" data-class="dpp4">
+                    <div class="class-header">
+                        <h2>Inibidores da DPP-IV</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Sitagliptina</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Januvia®</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>50 a 100 mg – 1x/dia</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução de HbA1c: 0,6%-0,8%</li>
+                                            <li>Segurança e tolerabilidade</li>
+                                            <li>Não altera o peso</li>
+                                            <li>Raramente causa hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Linagliptina</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nome Comercial</h4>
+                                        <p>Trayenta®</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>5 mg – 1x/dia</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Pode ser usada em qualquer estágio de doença renal</li>
+                                            <li>Não requer ajuste de dose na insuficiência renal</li>
+                                            <li>Não altera o peso</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Insulinas -->
+                <div class="medication-class" data-class="insulina">
+                    <div class="class-header">
+                        <h2>Insulinas Injetáveis</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <!-- Insulinas de Ação Rápida/Ultrarrápida -->
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Insulinas de Ação Ultrarrápida (Análogos)</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Tipos e Nomes Comerciais</h4>
+                                        <ul>
+                                            <li><strong>Lispro:</strong> Humalog® (100 U/mL, 200 U/mL)</li>
+                                            <li><strong>Asparte:</strong> NovoRapid®</li>
+                                            <li><strong>Glulisina:</strong> Apidra®</li>
+                                            <li><strong>Asparte ultrarrápida:</strong> Fiasp® (com niacinamida)</li>
+                                        </ul>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Frascos de 10 mL (100 U/mL)</li>
+                                            <li>Canetas pré-preenchidas descartáveis</li>
+                                            <li>Refis para canetas reutilizáveis</li>
+                                        </ul>
+                                        
+                                        <h4>Perfil de Ação</h4>
+                                        <ul>
+                                            <li><strong>Início de ação:</strong> 5-15 minutos (Fiasp: 2-5 minutos)</li>
+                                            <li><strong>Pico de ação:</strong> 1-2 horas</li>
+                                            <li><strong>Duração de ação:</strong> 3-5 horas</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Posologia</h4>
+                                        <p>Administrada imediatamente antes das refeições (Fiasp pode ser administrada até 20 minutos após o início da refeição). Dose calculada de acordo com a quantidade de carboidratos ingeridos e nível glicêmico pré-prandial.</p>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Início de ação mais rápido e duração mais curta que a insulina Regular</li>
+                                            <li>Melhor controle da hiperglicemia pós-prandial</li>
+                                            <li>Menor risco de hipoglicemia tardia</li>
+                                            <li>Maior flexibilidade em relação aos horários das refeições</li>
+                                            <li>Pode ser administrada imediatamente antes ou mesmo após as refeições (Fiasp)</li>
+                                        </ul>
+                                        
+                                        <h4>Indicações</h4>
+                                        <ul>
+                                            <li>Diabetes tipo 1 (componente bolus de esquemas basal-bolus)</li>
+                                            <li>Diabetes tipo 2 que necessita de insulinização prandial</li>
+                                            <li>Uso em bombas de infusão contínua de insulina</li>
+                                            <li>Correção de hiperglicemias pontuais</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Insulina Regular (Ação Curta)</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nomes Comerciais</h4>
+                                        <p>Humulin R®, Novolin R®</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Frascos de 10 mL (100 U/mL)</li>
+                                            <li>Refis para canetas reutilizáveis (alguns mercados)</li>
+                                        </ul>
+                                        
+                                        <h4>Perfil de Ação</h4>
+                                        <ul>
+                                            <li><strong>Início de ação:</strong> 30-60 minutos</li>
+                                            <li><strong>Pico de ação:</strong> 2-3 horas</li>
+                                            <li><strong>Duração de ação:</strong> 6-8 horas</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Posologia</h4>
+                                        <p>Administrada 30 minutos antes das refeições. Dose individualizada conforme necessidade do paciente.</p>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Baixo custo</li>
+                                            <li>Única insulina que pode ser administrada por via intravenosa em emergências</li>
+                                            <li>Disponível pelo SUS</li>
+                                        </ul>
+                                        
+                                        <h4>Limitações</h4>
+                                        <ul>
+                                            <li>Início de ação mais lento que os análogos ultrarrápidos</li>
+                                            <li>Duração mais prolongada, aumentando risco de hipoglicemia tardia</li>
+                                            <li>Menor flexibilidade de horários das refeições</li>
+                                            <li>Necessita ser aplicada 30 minutos antes das refeições</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Insulina NPH (Ação Intermediária)</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Nomes Comerciais</h4>
+                                        <p>Humulin N®, Novolin N®, Insulina Humana NPH®</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Frascos de 10 mL (100 U/mL)</li>
+                                            <li>Canetas pré-preenchidas descartáveis</li>
+                                            <li>Refis para canetas reutilizáveis</li>
+                                        </ul>
+                                        
+                                        <h4>Perfil de Ação</h4>
+                                        <ul>
+                                            <li><strong>Início de ação:</strong> 2-4 horas</li>
+                                            <li><strong>Pico de ação:</strong> 4-10 horas</li>
+                                            <li><strong>Duração de ação:</strong> 12-18 horas</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Posologia</h4>
+                                        <p>Geralmente administrada em 2 doses diárias (antes do café da manhã e antes do jantar/ao deitar). Requer homogeneização antes da aplicação.</p>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Baixo custo</li>
+                                            <li>Disponível pelo SUS</li>
+                                            <li>Ampla experiência de uso</li>
+                                        </ul>
+                                        
+                                        <h4>Limitações</h4>
+                                        <ul>
+                                            <li>Pico de ação pronunciado, aumentando risco de hipoglicemia</li>
+                                            <li>Grande variabilidade intra e interindividual de absorção</li>
+                                            <li>Necessidade de aplicação em horários regulares</li>
+                                            <li>Necessidade de homogeneização antes da aplicação</li>
+                                            <li>Geralmente requer mais de uma aplicação diária para cobertura basal adequada</li>
+                                        </ul>
+                                        
+                                        <h4>Considerações Especiais</h4>
+                                        <p>Apesar de suas limitações comparada aos análogos de insulina, a NPH continua sendo amplamente utilizada, principalmente em sistemas públicos de saúde, pelo seu baixo custo e eficácia comprovada quando usada adequadamente.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Insulinas de Ação Longa/Basal (Análogos)</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Tipos e Nomes Comerciais</h4>
+                                        <ul>
+                                            <li><strong>Glargina U100:</strong> Lantus®, Basaglar®</li>
+                                            <li><strong>Glargina U300:</strong> Toujeo® (300 U/mL, mais concentrada)</li>
+                                            <li><strong>Detemir:</strong> Levemir®</li>
+                                            <li><strong>Degludeca:</strong> Tresiba® (disponível nas concentrações U100 e U200)</li>
+                                        </ul>
+                                        
+                                        <h4>Perfil de Ação</h4>
+                                        <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+                                            <tr style="background-color: #f2f2f2;">
+                                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Insulina</th>
+                                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Início</th>
+                                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Pico</th>
+                                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Duração</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Glargina U100</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">2-4h</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Sem pico</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">20-24h</td>
+                                            </tr>
+                                            <tr style="background-color: #f2f2f2;">
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Glargina U300</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">6h</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Sem pico</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">30-36h</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Detemir</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">1-2h</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Sem pico pronunciado</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">18-24h</td>
+                                            </tr>
+                                            <tr style="background-color: #f2f2f2;">
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Degludeca</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">1-2h</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">Sem pico</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">>42h</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens em Relação à NPH</h4>
+                                        <ul>
+                                            <li>Perfil de ação mais previsível</li>
+                                            <li>Menor variabilidade intra e interindividual</li>
+                                            <li>Menor risco de hipoglicemia, especialmente noturna</li>
+                                            <li>Aplicação geralmente 1x/dia (detemir pode requerer 2x/dia em alguns casos)</li>
+                                            <li>Não requerem homogeneização antes da aplicação</li>
+                                            <li>Maior flexibilidade no horário de aplicação (especialmente degludeca)</li>
+                                        </ul>
+                                        
+                                        <h4>Características Específicas</h4>
+                                        <p><strong>Glargina U100:</strong> Foi o primeiro análogo de insulina basal. Tem pH ácido no frasco e precipita em microcristais no tecido subcutâneo, garantindo liberação lenta.</p>
+                                        
+                                        <p><strong>Glargina U300:</strong> Formulação mais concentrada (300 U/mL), com cinética de absorção mais lenta, perfil mais plano e duração mais prolongada que a U100.</p>
+                                        
+                                        <p><strong>Detemir:</strong> Liga-se à albumina, prolongando sua ação. Tende a causar menos ganho de peso que outras insulinas. Pode requerer 2 aplicações diárias em alguns pacientes.</p>
+                                        
+                                        <p><strong>Degludeca:</strong> Forma multi-hexâmeros solúveis no tecido subcutâneo, garantindo liberação ultraestável por mais de 42 horas. Permite flexibilidade no horário de aplicação (pode variar o horário em até 8 horas) e tem o menor risco de hipoglicemia entre as insulinas basais.</p>
+                                        
+                                        <h4>Indicações</h4>
+                                        <ul>
+                                            <li>Diabetes tipo 1 (componente basal de esquemas basal-bolus)</li>
+                                            <li>Diabetes tipo 2 que necessita de insulinoterapia basal</li>
+                                            <li>Pacientes com hipoglicemias frequentes ou graves com NPH</li>
+                                            <li>Pacientes que precisam de maior flexibilidade de horários</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Esquemas de Insulinoterapia</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Esquema Basal</h4>
+                                        <p><strong>Composição:</strong> Apenas insulina basal (NPH ou análogos de ação longa)</p>
+                                        <p><strong>Posologia:</strong> 1-2 aplicações diárias</p>
+                                        <p><strong>Indicação:</strong> Início da insulinoterapia em diabetes tipo 2, geralmente associada aos antidiabéticos orais</p>
+                                        <p><strong>Dose Inicial:</strong> 0,1-0,2 U/kg/dia ou 10 unidades/dia</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Esquema Basal-Plus</h4>
+                                        <p><strong>Composição:</strong> Insulina basal + 1 aplicação de insulina prandial (geralmente na principal refeição)</p>
+                                        <p><strong>Posologia:</strong> Basal 1x/dia + Prandial 1x/dia</p>
+                                        <p><strong>Indicação:</strong> Intensificação do tratamento quando o esquema basal não é suficiente</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Esquema Basal-Bolus</h4>
+                                        <p><strong>Composição:</strong> Insulina basal + insulina prandial antes das principais refeições</p>
+                                        <p><strong>Posologia:</strong> Basal 1x/dia + Prandial 3x/dia (antes das principais refeições)</p>
+                                        <p><strong>Indicação:</strong> Diabetes tipo 1, Diabetes tipo 2 avançado, durante internação hospitalar</p>
+                                        <p><strong>Dose Total:</strong> 0,5-1,0 U/kg/dia (40-50% basal e 50-60% prandial)</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Esquema Pré-Misturas</h4>
+                                        <p><strong>Composição:</strong> Insulinas pré-misturadas (NPH/Regular 70/30, Lispro 75/25, Asparte 70/30)</p>
+                                        <p><strong>Posologia:</strong> Geralmente 2x/dia (antes do café da manhã e antes do jantar)</p>
+                                        <p><strong>Indicação:</strong> Pacientes com horários regulares de refeições que precisam de esquema simplificado</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Sistema de Infusão Contínua (Bomba de Insulina)</h4>
+                                        <p><strong>Composição:</strong> Apenas insulina ultrarrápida (lispro, asparte ou glulisina)</p>
+                                        <p><strong>Funcionamento:</strong> Administra insulina basal continuamente e bolus conforme comandado pelo paciente</p>
+                                        <p><strong>Indicação:</strong> Diabetes tipo 1, hipoglicemias graves ou frequentes, grande variabilidade glicêmica, fenômeno do alvorecer pronunciado, gestação, necessidade de flexibilidade</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Considerações Importantes</h4>
+                                        <ul>
+                                            <li>A escolha do esquema deve ser individualizada, considerando características do paciente, metas de controle, risco de hipoglicemia e preferências</li>
+                                            <li>Todos os esquemas requerem monitoramento regular da glicemia para ajustes de dose</li>
+                                            <li>Educação sobre automonitoramento, técnica de aplicação, reconhecimento e tratamento de hipoglicemia é essencial</li>
+                                            <li>A flexibilidade e personalização do tratamento são cada vez mais valorizadas</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Técnicas de Aplicação e Armazenamento</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Locais de Aplicação</h4>
+                                        <ul>
+                                            <li><strong>Abdômen:</strong> Região preferencial, absorção mais rápida e constante. Evitar 5 cm ao redor do umbigo</li>
+                                            <li><strong>Face externa dos braços:</strong> Absorção intermediária</li>
+                                            <li><strong>Face anterior e lateral das coxas:</strong> Absorção mais lenta</li>
+                                            <li><strong>Região superior e lateral das nádegas:</strong> Absorção intermediária</li>
+                                        </ul>
+                                        
+                                        <h4>Rodízio dos Locais</h4>
+                                        <p>Recomenda-se rodízio dentro da mesma região anatômica, ao invés de alternar entre diferentes regiões, para maior previsibilidade da ação da insulina. Deve-se manter distância de 1-2 cm entre aplicações consecutivas.</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Armazenamento</h4>
+                                        <ul>
+                                            <li><strong>Frascos e canetas fechados:</strong> Refrigerador (2-8°C), não congelar, proteger da luz</li>
+                                            <li><strong>Em uso:</strong> Temperatura ambiente (até 30°C) por até 28 dias (verificar orientação específica para cada insulina)</li>
+                                            <li><strong>Viagens:</strong> Transportar em bolsas térmicas, nunca congelar</li>
+                                        </ul>
+                                        
+                                        <h4>Homogeneização</h4>
+                                        <p>Insulinas NPH, pré-misturas e formulações turvas requerem homogeneização antes do uso. Rolar o frasco ou caneta entre as palmas das mãos 10-20 vezes e inverter suavemente 10 vezes.</p>
+                                        
+                                        <h4>Técnica de Aplicação</h4>
+                                        <ol>
+                                            <li>Lavar as mãos</li>
+                                            <li>Se necessário, homogeneizar a insulina</li>
+                                            <li>Realizar assepsia do local com álcool 70%</li>
+                                            <li>Formar prega cutânea (dependendo do comprimento da agulha)</li>
+                                            <li>Inserir a agulha em ângulo de 90° (45° para pacientes muito magros)</li>
+                                            <li>Injetar a insulina lentamente</li>
+                                            <li>Aguardar 5-10 segundos antes de retirar a agulha</li>
+                                            <li>Não massagear o local após a aplicação</li>
+                                        </ol>
+                                        
+                                        <h4>Complicações da Aplicação</h4>
+                                        <ul>
+                                            <li><strong>Lipodistrofia:</strong> Alteração do tecido subcutâneo (lipohipertrofia ou lipoatrofia) que pode interferir na absorção da insulina</li>
+                                            <li><strong>Extravasamento:</strong> Perda de insulina durante ou após a aplicação</li>
+                                            <li><strong>Aplicação intramuscular inadvertida:</strong> Absorção mais rápida, risco de hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Associações Medicamentosas -->
+                <div class="medication-class" data-class="associacoes">
+                    <div class="class-header">
+                        <h2>Associações Medicamentosas</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Xigduo XR®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Dapagliflozina + Metformina XR (liberação prolongada)</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Xigduo XR® 5mg/500mg - embalagens com 14 ou 60 comprimidos</li>
+                                            <li>Xigduo XR® 5mg/1000mg - embalagens com 14 ou 60 comprimidos</li>
+                                            <li>Xigduo XR® 10mg/500mg - embalagens com 14 ou 30 comprimidos</li>
+                                            <li>Xigduo XR® 10mg/1000mg - embalagens com 14 ou 30 comprimidos</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 1x/dia, preferencialmente com uma refeição (à noite para melhor tolerabilidade)</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Dapagliflozina:</strong> Inibe o cotransportador SGLT2 nos túbulos renais, reduzindo a reabsorção da glicose filtrada e promovendo glicosúria</li>
+                                            <li><strong>Metformina XR:</strong> Reduz a produção hepática de glicose e melhora a sensibilidade à insulina</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Simplificação do regime terapêutico (dose única diária)</li>
+                                            <li>Redução de peso adicional</li>
+                                            <li>Redução da pressão arterial sistólica (2-4 mmHg)</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                            <li>Benefícios cardiovasculares e renais</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Meritor®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Rosuvastatina + Ezetimiba</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Meritor® 10mg/10mg - embalagens com 30 comprimidos</li>
+                                            <li>Meritor® 20mg/10mg - embalagens com 30 comprimidos</li>
+                                            <li>Meritor® 40mg/10mg - embalagens com 30 comprimidos</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 1x/dia, a qualquer hora do dia, com ou sem alimentos</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares para controle do colesterol:</p>
+                                        <ul>
+                                            <li><strong>Rosuvastatina:</strong> Inibidor da HMG-CoA redutase (estatina) que reduz a síntese hepática de colesterol</li>
+                                            <li><strong>Ezetimiba:</strong> Inibe a absorção intestinal de colesterol</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução significativa do LDL-colesterol (até 70%)</li>
+                                            <li>Efeito sinérgico entre os dois princípios ativos</li>
+                                            <li>Combate a dislipidemia aterogênica comum em pacientes diabéticos</li>
+                                            <li>Simplifica o regime terapêutico com dose única diária</li>
+                                            <li>Particularmente útil para pacientes diabéticos com risco cardiovascular elevado</li>
+                                            <li>Menor dose de rosuvastatina para atingir metas de LDL</li>
+                                            <li>Benefício adicional na redução da PCR (proteína C reativa) e na prevenção cardiovascular</li>
+                                        </ul>
+                                        
+                                        <h4>Efeitos Adversos</h4>
+                                        <ul>
+                                            <li>Mialgia/miopatia (menor incidência com a associação do que com altas doses de estatinas isoladas)</li>
+                                            <li>Elevação das enzimas hepáticas (raro)</li>
+                                            <li>Sintomas gastrointestinais</li>
+                                            <li>Cefaleia</li>
+                                        </ul>
+                                        
+                                        <h4>Contraindicações</h4>
+                                        <ul>
+                                            <li>Doença hepática ativa</li>
+                                            <li>Gravidez e lactação</li>
+                                            <li>Hipersensibilidade a qualquer componente da fórmula</li>
+                                        </ul>
+                                        
+                                        <h4>Importância no Tratamento do Diabetes</h4>
+                                        <p>O Meritor® é especialmente importante para pacientes diabéticos pois:</p>
+                                        <ul>
+                                            <li>Pacientes com diabetes têm risco cardiovascular aumentado e geralmente metas mais rigorosas de LDL-colesterol</li>
+                                            <li>A rosuvastatina tem efeito benéfico adicional no controle glicêmico</li>
+                                            <li>A combinação com ezetimiba permite atingir metas de LDL com doses menores de estatina, reduzindo risco de efeitos adversos associados a altas doses</li>
+                                            <li>Tem efeitos anti-inflamatórios que podem beneficiar pacientes diabéticos</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Janumet®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Sitagliptina + Metformina</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Janumet® 50mg/500mg - embalagens com 28 ou 56 comprimidos</li>
+                                            <li>Janumet® 50mg/850mg - embalagens com 28 ou 56 comprimidos</li>
+                                            <li>Janumet® 50mg/1000mg - embalagens com 28 ou 56 comprimidos</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 2x/dia, com as refeições</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,8-2,0%</li>
+                                            <li>Combina o efeito sensibilizador da metformina com o efeito incretínico da sitagliptina</li>
+                                            <li>Melhora a adesão ao tratamento</li>
+                                            <li>Sem ganho de peso adicional</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Synjardy®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Empagliflozina + Metformina</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Synjardy® 5mg/500mg - embalagens com 30 ou 60 comprimidos</li>
+                                            <li>Synjardy® 5mg/850mg - embalagens com 30 ou 60 comprimidos</li>
+                                            <li>Synjardy® 5mg/1000mg - embalagens com 30 ou 60 comprimidos</li>
+                                            <li>Synjardy® 12,5mg/500mg - embalagens com 30 ou 60 comprimidos</li>
+                                            <li>Synjardy® 12,5mg/850mg - embalagens com 30 ou 60 comprimidos</li>
+                                            <li>Synjardy® 12,5mg/1000mg - embalagens com 30 ou 60 comprimidos</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 2x/dia, com as refeições</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Empagliflozina:</strong> Inibe o cotransportador SGLT2 nos túbulos renais, promovendo glicosúria</li>
+                                            <li><strong>Metformina:</strong> Reduz a produção hepática de glicose e melhora a sensibilidade à insulina</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Redução de peso e da pressão arterial</li>
+                                            <li>Benefícios cardiovasculares e renais</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Galvus Met®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Vildagliptina + Metformina</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Galvus Met® 50mg/500mg - embalagens com 28 ou 56 comprimidos</li>
+                                            <li>Galvus Met® 50mg/850mg - embalagens com 28 ou 56 comprimidos</li>
+                                            <li>Galvus Met® 50mg/1000mg - embalagens com 28 ou 56 comprimidos</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 2x/dia, com as refeições</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,8-2,0%</li>
+                                            <li>Combina o efeito sensibilizador da metformina com o efeito incretínico da vildagliptina</li>
+                                            <li>Melhora a adesão ao tratamento</li>
+                                            <li>Sem ganho de peso adicional</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Trayenta Duo®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Linagliptina + Metformina</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Trayenta Duo® 2,5mg/500mg - embalagens com 60 comprimidos</li>
+                                            <li>Trayenta Duo® 2,5mg/850mg - embalagens com 60 comprimidos</li>
+                                            <li>Trayenta Duo® 2,5mg/1000mg - embalagens com 60 comprimidos</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 2x/dia, com as refeições</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Pode ser usado em pacientes com função renal reduzida (não requer ajuste para o componente linagliptina)</li>
+                                            <li>Sem ganho de peso adicional</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Glyxambi®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Empagliflozina + Linagliptina</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Glyxambi® 10mg/5mg - embalagens com 30 comprimidos</li>
+                                            <li>Glyxambi® 25mg/5mg - embalagens com 30 comprimidos</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 1x/dia, pela manhã, com ou sem alimentos</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Empagliflozina:</strong> Inibe o cotransportador SGLT2 nos túbulos renais, promovendo glicosúria</li>
+                                            <li><strong>Linagliptina:</strong> Inibe a enzima DPP-4, aumentando níveis de GLP-1 e promovendo a secreção de insulina dependente de glicose</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Simplifição do regime terapêutico (dose única diária)</li>
+                                            <li>Redução de peso e da pressão arterial (associada à empagliflozina)</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                            <li>Benefícios cardiovasculares e renais</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Xultophy®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Insulina Degludeca + Liraglutida</p>
+                                        
+                                        <h4>Apresentação</h4>
+                                        <p>Caneta pré-preenchida (100U+3,6mg)/mL - 3mL (300U+10,8mg)</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>Administração subcutânea 1x/dia, a qualquer hora do dia, titulado individualmente conforme necessidade. Dose inicial: 10 a 16 doses unitárias (10-16U insulina + 0,36-0,58mg liraglutida). Dose máxima: 50 doses unitárias</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Insulina Degludeca:</strong> Insulina basal de ação ultralonga que controla a glicemia de jejum</li>
+                                            <li><strong>Liraglutida:</strong> Agonista do receptor GLP-1 que estimula a secreção de insulina dependente de glicose e reduz a secreção de glucagon</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,8-2,5%</li>
+                                            <li>Menor ganho de peso comparado à terapia com insulina isolada</li>
+                                            <li>Menor risco de hipoglicemia comparado à terapia com insulina isolada</li>
+                                            <li>Simplificação do regime terapêutico (dose única diária)</li>
+                                            <li>Menor necessidade de titulação da dose de insulina</li>
+                                            <li>Possibilidade de redução das doses totais de insulina</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Insulinas Pré-Misturadas</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Tipos</h4>
+                                        <ul>
+                                            <li>NPH/Regular 70/30 (Humulin 70/30®, Novolin 70/30®)</li>
+                                            <li>Lispro 75/25 (Humalog Mix 25®)</li>
+                                            <li>Lispro 50/50 (Humalog Mix 50®)</li>
+                                            <li>Asparte 70/30 (NovoMix 30®)</li>
+                                        </ul>
+                                        
+                                        <h4>Apresentação</h4>
+                                        <p>Suspensão injetável 100 UI/mL</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>Geralmente 2x/dia antes do café da manhã e antes do jantar</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combinação de insulina de ação intermediária ou longa com insulina de ação rápida em proporções fixas</p>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Simplificação do regime terapêutico</li>
+                                            <li>Redução no número de injeções diárias</li>
+                                            <li>Melhora a adesão ao tratamento</li>
+                                            <li>Conveniente para pacientes com horários regulares de refeições</li>
+                                        </ul>
+                                        
+                                        <h4>Desvantagens</h4>
+                                        <ul>
+                                            <li>Menor flexibilidade de ajuste das doses basal e prandial separadamente</li>
+                                            <li>Maior risco de hipoglicemia em comparação com basal-bolus</li>
+                                            <li>Necessidade de horários regulares de refeições</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Soliqua®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Insulina Glargina + Lixisenatida</p>
+                                        
+                                        <h4>Apresentação</h4>
+                                        <p>Caneta pré-preenchida (100U+33mcg)/mL - 3mL (300U+99mcg)</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>Administração subcutânea 1x/dia, até 1 hora antes da primeira refeição do dia. Dose inicial: 10-20 doses unitárias (10-20U insulina + 5-10mcg lixisenatida). Dose máxima: 60 doses unitárias</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Insulina Glargina:</strong> Insulina basal de ação longa que controla a glicemia de jejum</li>
+                                            <li><strong>Lixisenatida:</strong> Agonista do receptor GLP-1 que estimula a secreção de insulina dependente de glicose e reduz a secreção de glucagon</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,8-2,5%</li>
+                                            <li>Menor ganho de peso comparado à terapia com insulina isolada</li>
+                                            <li>Menor risco de hipoglicemia comparado à terapia com insulina isolada</li>
+                                            <li>Simplificação do regime terapêutico (dose única diária)</li>
+                                            <li>Possibilidade de redução das doses totais de insulina</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Qtern®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Dapagliflozina + Saxagliptina</p>
+                                        
+                                        <h4>Apresentação</h4>
+                                        <p>Comprimidos de 10mg/5mg</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 1x/dia, pela manhã, com ou sem alimentos</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Dapagliflozina:</strong> Inibe o cotransportador SGLT2 nos túbulos renais, promovendo glicosúria</li>
+                                            <li><strong>Saxagliptina:</strong> Inibe a enzima DPP-4, aumentando níveis de GLP-1 e promovendo a secreção de insulina dependente de glicose</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Simplifição do regime terapêutico (dose única diária)</li>
+                                            <li>Redução de peso e da pressão arterial (associada à dapagliflozina)</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                            <li>Benefícios cardiovasculares e renais</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Trijardy XR®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Empagliflozina + Linagliptina + Metformina XR (tripla combinação)</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Trijardy XR® 5mg/2,5mg/1000mg</li>
+                                            <li>Trijardy XR® 10mg/5mg/1000mg</li>
+                                            <li>Trijardy XR® 12,5mg/2,5mg/1000mg</li>
+                                            <li>Trijardy XR® 25mg/5mg/1000mg</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 1x/dia, pela manhã, com alimentos</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina três mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Empagliflozina:</strong> Inibe o cotransportador SGLT2 nos túbulos renais, promovendo glicosúria</li>
+                                            <li><strong>Linagliptina:</strong> Inibe a enzima DPP-4, aumentando níveis de GLP-1</li>
+                                            <li><strong>Metformina XR:</strong> Reduz a produção hepática de glicose e melhora a sensibilidade à insulina</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 2,0-2,5% (tripla terapia)</li>
+                                            <li>Máxima simplificação do regime terapêutico oral (dose única diária)</li>
+                                            <li>Redução de peso e da pressão arterial</li>
+                                            <li>Benefícios cardiovasculares e renais</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                            <li>Formulação XR proporciona melhor tolerabilidade gastrointestinal</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Kombiglyze XR®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Saxagliptina + Metformina XR</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Kombiglyze XR® 2,5mg/500mg</li>
+                                            <li>Kombiglyze XR® 2,5mg/1000mg</li>
+                                            <li>Kombiglyze XR® 5mg/500mg</li>
+                                            <li>Kombiglyze XR® 5mg/1000mg</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 1x/dia, com uma refeição, preferencialmente no jantar</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Simplificação do regime terapêutico (dose única diária)</li>
+                                            <li>Melhora a adesão ao tratamento</li>
+                                            <li>Sem ganho de peso adicional</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                            <li>Formulação XR proporciona melhor tolerabilidade gastrointestinal</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Invokamet®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Canagliflozina + Metformina</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Invokamet® 50mg/500mg</li>
+                                            <li>Invokamet® 50mg/1000mg</li>
+                                            <li>Invokamet® 150mg/500mg</li>
+                                            <li>Invokamet® 150mg/1000mg</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 2x/dia, com as refeições</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Canagliflozina:</strong> Inibe o cotransportador SGLT2 nos túbulos renais, promovendo glicosúria</li>
+                                            <li><strong>Metformina:</strong> Reduz a produção hepática de glicose e melhora a sensibilidade à insulina</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Redução de peso e da pressão arterial</li>
+                                            <li>Benefícios cardiovasculares e renais</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Steglujan®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Ertugliflozina + Sitagliptina</p>
+                                        
+                                        <h4>Apresentações</h4>
+                                        <ul>
+                                            <li>Steglujan® 5mg/100mg</li>
+                                            <li>Steglujan® 15mg/100mg</li>
+                                        </ul>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>1 comprimido 1x/dia, pela manhã, com ou sem alimentos</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combina dois mecanismos de ação complementares:</p>
+                                        <ul>
+                                            <li><strong>Ertugliflozina:</strong> Inibe o cotransportador SGLT2 nos túbulos renais, promovendo glicosúria</li>
+                                            <li><strong>Sitagliptina:</strong> Inibe a enzima DPP-4, aumentando níveis de GLP-1</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Redução média de HbA1c: 1,5-2,0%</li>
+                                            <li>Simplifição do regime terapêutico (dose única diária)</li>
+                                            <li>Redução de peso e da pressão arterial (associada à ertugliflozina)</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Ryzodeg®</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>70% Insulina Degludeca + 30% Insulina Asparte</p>
+                                        
+                                        <h4>Apresentação</h4>
+                                        <p>Solução injetável 100 U/mL em caneta pré-preenchida de 3 mL</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>Dose individualizada, 1-2x/dia com a principal(is) refeição(ões)</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combinação de:</p>
+                                        <ul>
+                                            <li><strong>Insulina Degludeca:</strong> Insulina basal de ação ultralonga (>42h) que forma multi-hexâmeros solúveis após injeção subcutânea</li>
+                                            <li><strong>Insulina Asparte:</strong> Análogo de insulina de ação rápida</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Cobertura basal (Degludeca) e prandial (Asparte) em uma única injeção</li>
+                                            <li>Menor risco de hipoglicemia noturna comparado a outras pré-misturas</li>
+                                            <li>Flexibilidade de horários das refeições (pode-se variar o momento da aplicação, desde que seja com uma refeição principal)</li>
+                                            <li>Redução no número de injeções diárias</li>
+                                            <li>Separação das duas insulinas na solução (não é uma mistura convencional, mas uma co-formulação)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Combinações comuns na prática clínica -->
+                <div class="medication-class" data-class="combos-clinicos">
+                    <div class="class-header">
+                        <h2>Combinações Comuns na Prática Clínica</h2>
+                        <button class="btn-toggle">+</button>
+                    </div>
+                    <div class="class-body">
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Metformina + Insulina Basal</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Metformina (500-2550mg/dia) + Insulina Basal (Glargina, Degludeca, Detemir ou NPH)</p>
+                                        
+                                        <h4>Posologia</h4>
+                                        <p>Metformina: 2-3x/dia com as refeições</p>
+                                        <p>Insulina: 1x/dia (geralmente à noite)</p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Indicações</h4>
+                                        <ul>
+                                            <li>Falha no controle glicêmico com monoterapia ou combinações orais</li>
+                                            <li>Diabetes tipo 2 com deficiência de insulina progressiva</li>
+                                            <li>Pacientes com HbA1c >8,5-9,0% que precisam de rápida redução da glicemia</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Potente redução da glicemia (sem limite teto para efeito da insulina)</li>
+                                            <li>Menor ganho de peso e menor dose de insulina comparado à insulinoterapia isolada</li>
+                                            <li>Complementaridade de mecanismos de ação</li>
+                                            <li>Estratégia simples e eficaz para início de insulinoterapia</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Metformina + Pioglitazona</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Metformina (500-2550mg/dia) + Pioglitazona (15-45mg/dia)</p>
+                                        
+                                        <h4>Mecanismo de Ação</h4>
+                                        <p>Combinação complementar de sensibilizadores de insulina:</p>
+                                        <ul>
+                                            <li><strong>Metformina:</strong> Atua principalmente no fígado (reduz produção hepática de glicose)</li>
+                                            <li><strong>Pioglitazona:</strong> Atua principalmente no tecido adiposo e músculo (melhora captação de glicose periférica)</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Indicações</h4>
+                                        <ul>
+                                            <li>Pacientes com resistência insulínica acentuada</li>
+                                            <li>Pacientes com síndrome metabólica/esteatose hepática</li>
+                                            <li>Falha na monoterapia com metformina</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Potente redução da resistência à insulina</li>
+                                            <li>Melhora do perfil lipídico</li>
+                                            <li>Redução da esteatose hepática</li>
+                                            <li>Redução da inflamação sistêmica</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                        </ul>
+                                        
+                                        <h4>Limitações</h4>
+                                        <ul>
+                                            <li>Risco de retenção hídrica e edema</li>
+                                            <li>Ganho de peso (pioglitazona)</li>
+                                            <li>Risco de fraturas (pioglitazona)</li>
+                                            <li>Contraindicado em insuficiência cardíaca</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Metformina + inibidor SGLT2 + GLP-1</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Composição</h4>
+                                        <p>Metformina + inibidor SGLT2 (Dapagliflozina, Empagliflozina, etc.) + agonista receptor GLP-1 (Semaglutida, Liraglutida, etc.)</p>
+                                        
+                                        <h4>Indicações</h4>
+                                        <ul>
+                                            <li>Pacientes com diabetes tipo 2 e doença cardiovascular estabelecida</li>
+                                            <li>Pacientes com necessidade de redução de peso significativa</li>
+                                            <li>Falha no controle com dupla terapia</li>
+                                            <li>Alternativa à insulinoterapia em pacientes com HbA1c elevada</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Potente redução de HbA1c (2,0-2,5%)</li>
+                                            <li>Significativa redução de peso (efeito sinérgico)</li>
+                                            <li>Redução importante da pressão arterial</li>
+                                            <li>Benefícios cardiovasculares adicionais (complementaridade)</li>
+                                            <li>Proteção renal</li>
+                                            <li>Baixo risco de hipoglicemia</li>
+                                            <li>Combinação de mecanismos de ação diferentes e complementares</li>
+                                        </ul>
+                                        
+                                        <h4>Limitações</h4>
+                                        <ul>
+                                            <li>Custo elevado</li>
+                                            <li>Necessidade de injeções (componente GLP-1)</li>
+                                            <li>Efeitos adversos gastrointestinais podem ser somados</li>
+                                            <li>Risco de desidratação em pacientes suscetíveis</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medication">
+                            <div class="medication-header">
+                                <h3>Tripla Terapia Oral</h3>
+                                <button class="btn-toggle">+</button>
+                            </div>
+                            <div class="medication-body">
+                                <div class="medication-info">
+                                    <div class="info-section">
+                                        <h4>Opções de Combinação</h4>
+                                        <ul>
+                                            <li>Metformina + inibidor SGLT2 + inibidor DPP-4</li>
+                                            <li>Metformina + inibidor SGLT2 + Sulfonilureia</li>
+                                            <li>Metformina + inibidor DPP-4 + Sulfonilureia</li>
+                                            <li>Metformina + Pioglitazona + inibidor SGLT2</li>
+                                            <li>Metformina + Pioglitazona + inibidor DPP-4</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h4>Indicações</h4>
+                                        <ul>
+                                            <li>Falha no controle com dupla terapia</li>
+                                            <li>Pacientes com HbA1c 8,0-9,0% sem sintomas hiperglicêmicos importantes</li>
+                                            <li>Alternativa à terapia injetável</li>
+                                        </ul>
+                                        
+                                        <h4>Vantagens</h4>
+                                        <ul>
+                                            <li>Potente redução de HbA1c (1,5-2,5%)</li>
+                                            <li>Atua em múltiplos mecanismos fisiopatológicos do diabetes</li>
+                                            <li>Pode retardar a necessidade de terapia injetável</li>
+                                            <li>Maior adesão comparada às terapias injetáveis</li>
+                                        </ul>
+                                        
+                                        <h4>Considerações</h4>
+                                        <p>A escolha da tripla terapia deve considerar:</p>
+                                        <ul>
+                                            <li>Perfil de comorbidades do paciente (DCV, obesidade, IRC)</li>
+                                            <li>Risco de hipoglicemia</li>
+                                            <li>Custo e disponibilidade</li>
+                                            <li>Efeitos adversos específicos de cada classe</li>
+                                            <li>Preferências do paciente</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>© Consultório de Diabetes 2025 - Todos os direitos reservados</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Expansão/contração das seções
+            document.querySelectorAll('.class-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const body = this.nextElementSibling;
+                    body.classList.toggle('active');
+                    const button = this.querySelector('.btn-toggle');
+                    button.textContent = body.classList.contains('active') ? '-' : '+';
+                });
+            });
+            
+            document.querySelectorAll('.medication-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const body = this.nextElementSibling;
+                    body.classList.toggle('active');
+                    const button = this.querySelector('.btn-toggle');
+                    button.textContent = body.classList.contains('active') ? '-' : '+';
+                });
+            });
+            
+            // 2. Função de busca
+            const searchInput = document.getElementById('search');
+            searchInput.addEventListener('input', filterMedications);
+            
+            // 3. Filtro de classes
+            const allClassesCheckbox = document.querySelector('input[value="all"]');
+            const specificClassCheckboxes = document.querySelectorAll('#class-list input:not([value="all"])');
+            
+            allClassesCheckbox.addEventListener('change', function() {
+                specificClassCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                filterMedications();
+            });
+            
+            specificClassCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const allSpecificChecked = Array.from(specificClassCheckboxes).every(cb => cb.checked);
+                    allClassesCheckbox.checked = allSpecificChecked;
+                    filterMedications();
+                });
+            });
+            
+            // 4. Função para filtrar medicamentos
+            function filterMedications() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedClasses = Array.from(document.querySelectorAll('#class-list input:checked:not([value="all"])')).map(cb => cb.value);
+                
+                // Se "Todos" estiver marcado, incluir todas as classes
+                if (allClassesCheckbox.checked) {
+                    document.querySelectorAll('.medication-class').forEach(cls => {
+                        cls.style.display = 'block';
+                    });
+                } else {
+                    // Caso contrário, mostrar apenas as classes selecionadas
+                    document.querySelectorAll('.medication-class').forEach(cls => {
+                        const classType = cls.getAttribute('data-class');
+                        cls.style.display = selectedClasses.includes(classType) ? 'block' : 'none';
+                    });
+                }
+                
+                // Filtrar por termo de busca
+                let foundAny = false;
+                document.querySelectorAll('.medication').forEach(med => {
+                    const medicationName = med.querySelector('h3').textContent.toLowerCase();
+                    const medicationContent = med.textContent.toLowerCase();
+                    
+                    if (searchTerm === '' || medicationName.includes(searchTerm) || medicationContent.includes(searchTerm)) {
+                        med.style.display = 'block';
+                        foundAny = true;
+                    } else {
+                        med.style.display = 'none';
+                    }
+                });
+                
+                // Mostrar mensagem se não encontrar resultados
+                document.getElementById('no-results').style.display = foundAny ? 'none' : 'block';
+            }
+            
+            // 5. Inicialização - abrir a primeira classe
+            const firstClassHeader = document.querySelector('.class-header');
+            if (firstClassHeader) {
+                const firstClassBody = firstClassHeader.nextElementSibling;
+                firstClassBody.classList.add('active');
+                firstClassHeader.querySelector('.btn-toggle').textContent = '-';
+            }
+        });
+    </script>
+</body>
+</html>
