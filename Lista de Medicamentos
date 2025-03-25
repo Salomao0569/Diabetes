@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Medicamentos para Diabetes Tipo II</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #005EB8;
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .filters input, .filters select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .filters input {
+            flex-grow: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #005EB8;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .med-class {
+            font-style: italic;
+            color: #666;
+        }
+        .hba1c {
+            font-weight: bold;
+            color: #d9534f;
+        }
+        .details-section {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .details-section h2 {
+            color: #005EB8;
+            border-bottom: 2px solid #005EB8;
+            padding-bottom: 10px;
+        }
+        .reference {
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Guia de Medicamentos para Diabetes Tipo II</h1>
+            <p>Referência completa de medicamentos e associações para controle glicêmico</p>
+        </header>
+
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Pesquisar medicamento..." oninput="filterTable()">
+            <select id="classFilter" onchange="filterTable()">
+                <option value="">Todas as classes</option>
+                <option value="Biguanida">Biguanida</option>
+                <option value="Sulfoniluréia">Sulfoniluréia</option>
+                <option value="Inibidor de DPP-4">Inibidor de DPP-4</option>
+                <option value="Inibidor de SGLT-2">Inibidor de SGLT-2</option>
+                <option value="Agonista de GLP-1">Agonista de GLP-1</option>
+                <option value="Associação">Associação</option>
+                <option value="Tiazolidinediona">Tiazolidinediona</option>
+                <option value="Inibidor de alfa-glicosidase">Inibidor de alfa-glicosidase</option>
+                <option value="Insulina">Insulina</option>
+                <option value="Agonista de GLP-1 e GIP">Agonista de GLP-1 e GIP</option>
+                <option value="Outro">Outro</option>
+            </select>
+        </div>
+
+        <table id="medicationsTable">
+            <thead>
+                <tr>
+                    <th>Medicamento (Nome comercial)</th>
+                    <th>Classe</th>
+                    <th>Redução média de HbA1c</th>
+                    <th>Principais indicações</th>
+                    <th>Contraindicações</th>
+                    <th>Efeitos colaterais</th>
+                    <th>Considerações especiais</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Metformina -->
+                <tr>
+                    <td>Metformina (Glifage, Glucophage)</td>
+                    <td class="med-class">Biguanida</td>
+                    <td class="hba1c">1.0-2.0%</td>
+                    <td>Primeira linha de tratamento; eficaz para controle de hiperglicemia; ajuda a reduzir peso</td>
+                    <td>Doença renal grave (TFG < 30 ml/min); acidose metabólica; insuficiência hepática grave</td>
+                    <td>Distúrbios gastrointestinais; deficiência de B12 a longo prazo</td>
+                    <td>Deve ser suspensa temporariamente antes de procedimentos com contraste iodado; reduzir dose se TFG entre 30-45 ml/min</td>
+                </tr>
+                
+                <!-- Glibenclamida -->
+                <tr>
+                    <td>Glibenclamida (Daonil)</td>
+                    <td class="med-class">Sulfoniluréia</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Controle de hiperglicemia; secreção de insulina; baixo custo</td>
+                    <td>Insuficiência renal ou hepática; alergia a sulfa; diabetes tipo 1; gravidez</td>
+                    <td>Hipoglicemia (maior risco); ganho de peso</td>
+                    <td>Evitar em idosos e pacientes com risco de hipoglicemia; tomar com as refeições</td>
+                </tr>
+                
+                <!-- Glimepirida -->
+                <tr>
+                    <td>Glimepirida (Amaryl)</td>
+                    <td class="med-class">Sulfoniluréia</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Controle de hiperglicemia; menor risco de hipoglicemia comparado a outras sulfoniluréias</td>
+                    <td>Insuficiência renal ou hepática; alergia a sulfa; diabetes tipo 1</td>
+                    <td>Hipoglicemia; ganho de peso (menos que outras sulfoniluréias)</td>
+                    <td>Dose única diária; melhor perfil de segurança cardiovascular entre as sulfoniluréias</td>
+                </tr>
+                
+                <!-- Gliclazida -->
+                <tr>
+                    <td>Gliclazida (Diamicron, Diamicron MR)</td>
+                    <td class="med-class">Sulfoniluréia</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Controle glicêmico; menor risco cardiovascular; menor risco de hipoglicemia entre as sulfoniluréias</td>
+                    <td>Insuficiência renal grave; insuficiência hepática grave; alergia a sulfa; diabetes tipo 1</td>
+                    <td>Hipoglicemia (menor risco entre sulfoniluréias); ganho de peso; distúrbios gastrointestinais</td>
+                    <td>Versão MR permite dose única diária; evidências sugerem melhor perfil cardiovascular; ligação seletiva ao receptor SUR1</td>
+                </tr>
+                
+                <!-- Glipizida -->
+                <tr>
+                    <td>Glipizida (Minidiab)</td>
+                    <td class="med-class">Sulfoniluréia</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Controle de hiperglicemia; melhor perfil que a glibenclamida em idosos</td>
+                    <td>Insuficiência renal ou hepática; alergia a sulfa; diabetes tipo 1</td>
+                    <td>Hipoglicemia; ganho de peso; raramente reações cutâneas</td>
+                    <td>Meia-vida mais curta; pode ser preferível em idosos quando comparada à glibenclamida; tomar antes das refeições</td>
+                </tr>
+                
+                <!-- Clorpropamida -->
+                <tr>
+                    <td>Clorpropamida (Diabinese)</td>
+                    <td class="med-class">Sulfoniluréia</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Controle de hiperglicemia; baixo custo</td>
+                    <td>Insuficiência renal ou hepática; idosos; alergia a sulfa; diabetes tipo 1</td>
+                    <td>Hipoglicemia prolongada; ganho de peso; reação tipo dissulfiram com álcool; hiponatremia</td>
+                    <td>Meia-vida muito longa; hipoglicemias podem ser graves e prolongadas; praticamente em desuso</td>
+                </tr>
+                
+                <!-- Sitagliptina -->
+                <tr>
+                    <td>Sitagliptina (Januvia)</td>
+                    <td class="med-class">Inibidor de DPP-4</td>
+                    <td class="hba1c">0.5-0.8%</td>
+                    <td>Controle glicêmico sem ganho de peso; baixo risco de hipoglicemia; idosos</td>
+                    <td>Hipersensibilidade ao medicamento; pancreatite aguda</td>
+                    <td>Geralmente bem tolerado; nasofaringite; rara pancreatite</td>
+                    <td>Ajuste de dose em insuficiência renal; pode ser usado com metformina</td>
+                </tr>
+                
+                <!-- Saxagliptina -->
+                <tr>
+                    <td>Saxagliptina (Onglyza)</td>
+                    <td class="med-class">Inibidor de DPP-4</td>
+                    <td class="hba1c">0.5-0.8%</td>
+                    <td>Controle glicêmico sem ganho de peso; pacientes com doença cardiovascular</td>
+                    <td>Hipersensibilidade ao medicamento; história de pancreatite</td>
+                    <td>Infecções respiratórias superiores; pequeno risco de insuficiência cardíaca</td>
+                    <td>Usar com cautela em pacientes com ICC; redução de dose em insuficiência renal</td>
+                </tr>
+                
+                <!-- Vildagliptina -->
+                <tr>
+                    <td>Vildagliptina (Galvus)</td>
+                    <td class="med-class">Inibidor de DPP-4</td>
+                    <td class="hba1c">0.5-0.9%</td>
+                    <td>Controle glicêmico sem ganho de peso; idosos; pode ser usado em pacientes com TFG reduzida</td>
+                    <td>Insuficiência hepática; ALT/AST > 3x limite superior; história de pancreatite</td>
+                    <td>Cefaleia; náusea; edema periférico; tremores; possível elevação de enzimas hepáticas</td>
+                    <td>Requer monitoramento hepático; dose dividida (2x ao dia); pode ser usado em pacientes com TFG até 50 ml/min sem ajuste</td>
+                </tr>
+                
+                <!-- Linagliptina -->
+                <tr>
+                    <td>Linagliptina (Trayenta, Tradjenta)</td>
+                    <td class="med-class">Inibidor de DPP-4</td>
+                    <td class="hba1c">0.5-0.7%</td>
+                    <td>Controle glicêmico em pacientes com insuficiência renal; não requer ajuste de dose renal</td>
+                    <td>Hipersensibilidade ao medicamento; angioedema prévio com inibidores DPP-4</td>
+                    <td>Nasofaringite; tosse; rara reação de hipersensibilidade; rara pancreatite</td>
+                    <td>Única sem eliminação renal significativa; não requer ajuste em nenhum grau de insuficiência renal</td>
+                </tr>
+                
+                <!-- Alogliptina -->
+                <tr>
+                    <td>Alogliptina (Nesina)</td>
+                    <td class="med-class">Inibidor de DPP-4</td>
+                    <td class="hba1c">0.5-0.8%</td>
+                    <td>Controle glicêmico sem ganho de peso; segurança cardiovascular comprovada</td>
+                    <td>Hipersensibilidade; insuficiência renal grave</td>
+                    <td>Infecção respiratória superior; nasofaringite; cefaleia; raras reações cutâneas graves</td>
+                    <td>Segurança demonstrada em pacientes com eventos cardiovasculares recentes; ajuste de dose em insuficiência renal</td>
+                </tr>
+                
+                <!-- Dapagliflozina -->
+                <tr>
+                    <td>Dapagliflozina (Forxiga)</td>
+                    <td class="med-class">Inibidor de SGLT-2</td>
+                    <td class="hba1c">0.5-1.0%</td>
+                    <td>Redução de peso; benefício cardiovascular; protege função renal; insuficiência cardíaca</td>
+                    <td>Insuficiência renal grave (TFG < 45 ml/min); diálise</td>
+                    <td>Infecções genitourinárias; depleção de volume; rara cetoacidose</td>
+                    <td>Benefícios cardiovasculares comprovados; redução de hospitalização por IC</td>
+                </tr>
+                
+                <!-- Empagliflozina -->
+                <tr>
+                    <td>Empagliflozina (Jardiance)</td>
+                    <td class="med-class">Inibidor de SGLT-2</td>
+                    <td class="hba1c">0.5-1.0%</td>
+                    <td>Redução de eventos cardiovasculares; insuficiência cardíaca; nefropatia diabética</td>
+                    <td>Insuficiência renal grave (TFG < 30 ml/min); diálise</td>
+                    <td>Infecções genitourinárias; desidratação; rara cetoacidose</td>
+                    <td>Redução significativa de morte por causas cardiovasculares; efeito favorável na pressão arterial</td>
+                </tr>
+                
+                <!-- Canagliflozina -->
+                <tr>
+                    <td>Canagliflozina (Invokana)</td>
+                    <td class="med-class">Inibidor de SGLT-2</td>
+                    <td class="hba1c">0.7-1.0%</td>
+                    <td>Redução de eventos renais e cardiovasculares; proteção renal comprovada; redução de peso</td>
+                    <td>Insuficiência renal grave (TFG < 30 ml/min); diálise; histórico de amputação</td>
+                    <td>Infecções genitourinárias; risco aumentado de amputação (especialmente dedos); depleção volêmica</td>
+                    <td>Monitorar pés regularmente; evitar em pacientes com histórico de amputação ou elevado risco; benefício renal significativo</td>
+                </tr>
+                
+                <!-- Ertugliflozina -->
+                <tr>
+                    <td>Ertugliflozina (Steglatro)</td>
+                    <td class="med-class">Inibidor de SGLT-2</td>
+                    <td class="hba1c">0.5-1.0%</td>
+                    <td>Redução de peso; efeito favorável na pressão arterial; melhora controle glicêmico</td>
+                    <td>Insuficiência renal grave (TFG < 30 ml/min); diálise</td>
+                    <td>Infecções fúngicas genitais; infecções do trato urinário; hipotensão</td>
+                    <td>Benefícios cardiovasculares demonstrados (não-inferioridade); monitorar função renal</td>
+                </tr>
+                
+                <!-- Liraglutida -->
+                <tr>
+                    <td>Liraglutida (Victoza, Saxenda)</td>
+                    <td class="med-class">Agonista de GLP-1</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Obesidade; doença cardiovascular estabelecida; redução de peso</td>
+                    <td>História pessoal/familiar de carcinoma medular da tireoide; neoplasia endócrina múltipla tipo 2</td>
+                    <td>Náusea; vômito; diarreia (geralmente transitórios); redução do apetite</td>
+                    <td>Injeção subcutânea diária; benefícios cardiovasculares comprovados; Saxenda em dose maior aprovada para obesidade</td>
+                </tr>
+                
+                <!-- Semaglutida -->
+                <tr>
+                    <td>Semaglutida (Ozempic, Rybelsus, Wegovy)</td>
+                    <td class="med-class">Agonista de GLP-1</td>
+                    <td class="hba1c">1.5-2.0%</td>
+                    <td>Obesidade; DCV estabelecida; redução significativa de peso; disponível em SC ou oral</td>
+                    <td>História pessoal/familiar de carcinoma medular da tireoide; neoplasia endócrina múltipla tipo 2</td>
+                    <td>Náusea; vômito; diarreia; redução do apetite</td>
+                    <td>Potente redução de HbA1c; injeção SC semanal (Ozempic/Wegovy) ou comprimido diário (Rybelsus); Wegovy em dose maior aprovada para obesidade</td>
+                </tr>
+                
+                <!-- Dulaglutida -->
+                <tr>
+                    <td>Dulaglutida (Trulicity)</td>
+                    <td class="med-class">Agonista de GLP-1</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Redução de eventos cardiovasculares; facilidade de uso; redução moderada de peso</td>
+                    <td>História pessoal/familiar de carcinoma medular da tireoide; neoplasia endócrina múltipla tipo 2</td>
+                    <td>Náusea; diarreia; vômito; dor abdominal; redução do apetite</td>
+                    <td>Caneta pré-preenchida semanal de fácil aplicação; não requer reconstituição; dispositivo com agulha escondida</td>
+                </tr>
+                
+                <!-- Exenatida -->
+                <tr>
+                    <td>Exenatida (Byetta, Bydureon)</td>
+                    <td class="med-class">Agonista de GLP-1</td>
+                    <td class="hba1c">0.8-1.5%</td>
+                    <td>Redução de peso; controle glicêmico pós-prandial (Byetta); dose semanal disponível (Bydureon)</td>
+                    <td>História pessoal/familiar de carcinoma medular da tireoide; insuficiência renal severa; pancreatite aguda ou crônica</td>
+                    <td>Náusea; vômito; reações no local da injeção (Bydureon); diarreia</td>
+                    <td>Byetta: 2x/dia antes das refeições; Bydureon: formulação de liberação prolongada semanal; evitar em TFG < 30 ml/min</td>
+                </tr>
+                
+                <!-- Tirzepatida -->
+                <tr>
+                    <td>Tirzepatida (Mounjaro, Zepbound)</td>
+                    <td class="med-class">Agonista de GLP-1 e GIP</td>
+                    <td class="hba1c">1.8-2.3%</td>
+                    <td>Potente redução de peso (superior a outros GLP-1); controle glicêmico excepcional; obesidade</td>
+                    <td>História pessoal/familiar de carcinoma medular da tireoide; neoplasia endócrina múltipla tipo 2; pancreatite</td>
+                    <td>Náusea; diarreia; vômito; constipação; dor abdominal; redução do apetite</td>
+                    <td>Duplo agonista (GLP-1 e GIP); aplicação semanal; maior redução de HbA1c e peso entre todos os antidiabéticos; Zepbound aprovado para obesidade</td>
+                </tr>
+                
+                <!-- Pioglitazona -->
+                <tr>
+                    <td>Pioglitazona (Actos)</td>
+                    <td class="med-class">Tiazolidinediona</td>
+                    <td class="hba1c">0.5-1.4%</td>
+                    <td>Resistência à insulina; esteatose hepática</td>
+                    <td>Insuficiência cardíaca; doença hepática ativa; câncer de bexiga</td>
+                    <td>Retenção hídrica; ganho de peso; risco de fraturas ósseas; edema</td>
+                    <td>Monitorar função hepática; evitar em pacientes com risco de insuficiência cardíaca</td>
+                </tr>
+                
+                <!-- Acarbose -->
+                <tr>
+                    <td>Acarbose (Glucobay)</td>
+                    <td class="med-class">Inibidor de alfa-glicosidase</td>
+                    <td class="hba1c">0.5-0.8%</td>
+                    <td>Hiperglicemia pós-prandial; dieta rica em carboidratos</td>
+                    <td>Doença inflamatória intestinal; obstrução intestinal; cirrose</td>
+                    <td>Flatulência; diarreia; dor abdominal</td>
+                    <td>Tomar no início das refeições; eficácia limitada como monoterapia</td>
+                </tr>
+                
+                <!-- Miglitol -->
+                <tr>
+                    <td>Miglitol (Glyset)</td>
+                    <td class="med-class">Inibidor de alfa-glicosidase</td>
+                    <td class="hba1c">0.5-0.8%</td>
+                    <td>Hiperglicemia pós-prandial; maior biodisponibilidade que acarbose</td>
+                    <td>Doença inflamatória intestinal; doença renal crônica; úlceras intestinais</td>
+                    <td>Flatulência; diarreia; dor abdominal (similar à acarbose)</td>
+                    <td>Inibição mais potente da maltase e sucrase que a acarbose; tomar com a primeira mordida das refeições</td>
+                </tr>
+                
+                <!-- Voglibose -->
+                <tr>
+                    <td>Voglibose (Basen, Voglib)</td>
+                    <td class="med-class">Inibidor de alfa-glicosidase</td>
+                    <td class="hba1c">0.5-0.7%</td>
+                    <td>Hiperglicemia pós-prandial; prevenção de diabetes em pacientes com intolerância à glicose</td>
+                    <td>Doença inflamatória intestinal; obstrução intestinal; cetose</td>
+                    <td>Flatulência; dor abdominal; diarreia (possivelmente menos intensa que acarbose)</td>
+                    <td>Menos estudado que acarbose, mas possivelmente melhor tolerado; eficaz na prevenção da progressão de pré-diabetes para diabetes</td>
+                </tr>
+                
+                <!-- Repaglinida -->
+                <tr>
+                    <td>Repaglinida (Prandin, NovoNorm)</td>
+                    <td class="med-class">Meglitinida</td>
+                    <td class="hba1c">0.5-1.5%</td>
+                    <td>Controle de hiperglicemia pós-prandial; alternativa a sulfoniluréias em insuficiência renal; horários irregulares de refeição</td>
+                    <td>Insuficiência hepática grave; diabetes tipo 1; gravidez</td>
+                    <td>Hipoglicemia (menor risco que sulfoniluréias); ganho de peso; cefaleia</td>
+                    <td>Tomada pré-prandial; início de ação rápido e duração curta; flexibilidade com refeições; pode ser usada com TFG reduzida</td>
+                </tr>
+                
+                <!-- Nateglinida -->
+                <tr>
+                    <td>Nateglinida (Starlix)</td>
+                    <td class="med-class">Meglitinida</td>
+                    <td class="hba1c">0.5-1.0%</td>
+                    <td>Controle de hiperglicemia pós-prandial; duração de ação mais curta que repaglinida</td>
+                    <td>Insuficiência hepática grave; diabetes tipo 1; cetoacidose</td>
+                    <td>Hipoglicemia (menor risco que repaglinida); ganho de peso; sintomas respiratórios</td>
+                    <td>Ação muito rápida e de curta duração; menor risco de hipoglicemia entre secretagogos; tomar até 30 min antes das refeições</td>
+                </tr>
+                
+                <!-- Mitiglinida -->
+                <tr>
+                    <td>Mitiglinida (Glufast)</td>
+                    <td class="med-class">Meglitinida</td>
+                    <td class="hba1c">0.5-1.0%</td>
+                    <td>Controle de hiperglicemia pós-prandial; rápido início de ação</td>
+                    <td>Insuficiência hepática grave; diabetes tipo 1</td>
+                    <td>Hipoglicemia; ganho de peso</td>
+                    <td>Disponível principalmente na Ásia; perfil farmacocinético semelhante à nateglinida; tomar antes das refeições</td>
+                </tr>
+                
+                <!-- Rosiglitazona -->
+                <tr>
+                    <td>Rosiglitazona (Avandia)</td>
+                    <td class="med-class">Tiazolidinediona</td>
+                    <td class="hba1c">0.5-1.4%</td>
+                    <td>Resistência à insulina; esteatose hepática</td>
+                    <td>Insuficiência cardíaca; doença cardiovascular estabelecida; doença hepática</td>
+                    <td>Retenção hídrica; ganho de peso; risco aumentado de fraturas; edema; possível aumento de risco cardiovascular</td>
+                    <td>Uso restrito devido a preocupações cardiovasculares; monitoramento cardiovascular regular; contraindicada em pacientes com doença cardíaca isquêmica</td>
+                </tr>
+                
+                <!-- Pioglitazona + Alogliptina -->
+                <tr>
+                    <td>Pioglitazona + Metformina (Actoplus Met, Actoplus Met XR)</td>
+                    <td class="med-class">Associação (Tiazolidinediona + Biguanida)</td>
+                    <td class="hba1c">1.0-1.8%</td>
+                    <td>Resistência à insulina; esteatose hepática; falha da monoterapia</td>
+                    <td>Insuficiência cardíaca; insuficiência renal grave; doença hepática</td>
+                    <td>Retenção hídrica; ganho de peso; efeitos GI; edema</td>
+                    <td>Monitorar função cardíaca e hepática; versão XR permite dose única diária</td>
+                </tr>
+                
+                <!-- Pramlintida -->
+                <tr>
+                    <td>Pramlintida (Symlin)</td>
+                    <td class="med-class">Análogo de amilina</td>
+                    <td class="hba1c">0.3-0.6%</td>
+                    <td>Controle glicêmico pós-prandial; redução de peso; uso com insulina em diabetes tipo 1 ou 2</td>
+                    <td>Hipoglicemia não reconhecida; gastroparesia grave</td>
+                    <td>Náusea; hipoglicemia; anorexia; cefaleia</td>
+                    <td>Injeção subcutânea antes das refeições; reduz glicagon pós-prandial; retarda esvaziamento gástrico; frequentemente necessita redução da dose de insulina</td>
+                </tr>
+                
+                <!-- Bromocriptina -->
+                <tr>
+                    <td>Bromocriptina (Cycloset)</td>
+                    <td class="med-class">Outro (Agonista dopaminérgico)</td>
+                    <td class="hba1c">0.4-0.8%</td>
+                    <td>Resistência à insulina; obesidade; formulação específica para diabetes diferente da usada em Parkinson</td>
+                    <td>Psicose; síncope; enxaqueca; hipotensão</td>
+                    <td>Náusea; fadiga; tonturas; hipotensão</td>
+                    <td>Mecanismo não totalmente elucidado; tomar pela manhã; pode ter benefícios cardiovasculares</td>
+                </tr>
+                
+                <!-- Colesevelam -->
+                <tr>
+                    <td>Colesevelam (Welchol, Cholestagel)</td>
+                    <td class="med-class">Outro (Sequestrante de ácidos biliares)</td>
+                    <td class="hba1c">0.3-0.5%</td>
+                    <td>Hipercolesterolemia; controle glicêmico modesto; diabetes tipo 2 com LDL elevado</td>
+                    <td>Hipertrigliceridemia; histórico de obstrução intestinal; pancreatite por hipertrigliceridemia</td>
+                    <td>Constipação; dispepsia; náusea; elevação de triglicerídeos</td>
+                    <td>Benefício duplo em diabetes e dislipidemia; mecanismo de ação na diabetes não totalmente esclarecido</td>
+                </tr>
+                
+                <!-- Bempedoico + Ezetimibe -->
+                <tr>
+                    <td>Bempedoico + Ezetimibe (Nexlizet)</td>
+                    <td class="med-class">Outro (Inibidor de ATP citrato liase + Inibidor absorção colesterol)</td>
+                    <td class="hba1c">0.2-0.4%</td>
+                    <td>Dislipidemia em diabéticos; efeito modesto na glicemia; alternativa às estatinas</td>
+                    <td>Gota; hiperuricemia severa; doença hepática ativa</td>
+                    <td>Elevação de ácido úrico; dor muscular (menos que estatinas); nasofaringite</td>
+                    <td>Benefício primário na redução de LDL-C em diabéticos com intolerância às estatinas; efeito secundário na glicemia</td>
+                </tr>
+                
+                <!-- Insulinas pré-misturadas -->
+                <tr>
+                    <td>Insulina bifásica 70/30 (Novolin 70/30, Humulin 70/30)</td>
+                    <td class="med-class">Insulina</td>
+                    <td class="hba1c">1.5-3.5%</td>
+                    <td>Cobertura basal e prandial com uma única injeção; simplificação do regime</td>
+                    <td>Hipoglicemia ativa</td>
+                    <td>Hipoglicemia; ganho de peso; variabilidade glicêmica</td>
+                    <td>Contém 70% NPH e 30% regular; tomada 2x/dia antes do café e jantar; menor flexibilidade que regime basal-bolus</td>
+                </tr>
+                
+                <!-- Análogos bifásicos -->
+                <tr>
+                    <td>Insulina lispro 75/25 (Humalog Mix 75/25)</td>
+                    <td class="med-class">Insulina</td>
+                    <td class="hba1c">1.5-3.5%</td>
+                    <td>Cobertura basal e prandial; melhor perfil pós-prandial que 70/30 humana</td>
+                    <td>Hipoglicemia ativa</td>
+                    <td>Hipoglicemia; ganho de peso</td>
+                    <td>Contém 75% protamina lispro, 25% lispro; aplicar 15 minutos antes das refeições; melhor perfil pós-prandial</td>
+                </tr>
+                
+                <!-- Análogos bifásicos -->
+                <tr>
+                    <td>Insulina aspart 70/30 (NovoMix 70/30)</td>
+                    <td class="med-class">Insulina</td>
+                    <td class="hba1c">1.5-3.5%</td>
+                    <td>Cobertura basal e prandial; melhor perfil pós-prandial que 70/30 humana</td>
+                    <td>Hipoglicemia ativa</td>
+                    <td>Hipoglicemia; ganho de peso</td>
+                    <td>Contém 70% protamina aspart, 30% aspart; aplicar 15 minutos antes das refeições</td>
+                </tr>
+                
+                <!-- Metformina+DPP4+SGLT2 -->
+                <tr>
+                    <td>Empagliflozina + Linagliptina + Metformina (Trijardy XR)</td>
+                    <td class="med-class">Associação Tripla (Inibidor de SGLT-2 + Inibidor de DPP-4 + Biguanida)</td>
+                    <td class="hba1c">1.5-2.3%</td>
+                    <td>Falha com terapia dupla; simplificação do regime terapêutico; benefício cardiovascular e renal</td>
+                    <td>Insuficiência renal grave (TFG < 30 ml/min); acidose metabólica; cetoacidose</td>
+                    <td>Infecções genitourinárias; efeitos GI; hipotensão; risco baixo de pancreatite</td>
+                    <td>Combinação de três classes em um único comprimido; melhora adesão; benefícios cardiovasculares combinados</td>
+                </tr>
+                
+                <!-- Dapagliflozina+Saxagliptina+Metformina XR -->
+                <tr>
+                    <td>Dapagliflozina + Saxagliptina + Metformina XR (Qternmet XR)</td>
+                    <td class="med-class">Associação Tripla (Inibidor de SGLT-2 + Inibidor de DPP-4 + Biguanida)</td>
+                    <td class="hba1c">1.5-2.2%</td>
+                    <td>Falha com terapia dupla; simplificação do regime terapêutico; controle pressórico</td>
+                    <td>Insuficiência renal grave (TFG < 45 ml/min); acidose metabólica; pancreatite</td>
+                    <td>Infecções genitourinárias; efeitos GI; nasofaringite; cefaleia</td>
+                    <td>Dose única diária; maior conveniência; melhora adesão ao tratamento</td>
+                </tr>
+                
+                <!-- Semaglutida oral+SGLT2 -->
+                <tr>
+                    <td>Semaglutida oral + Empagliflozina</td>
+                    <td class="med-class">Associação (Agonista de GLP-1 oral + Inibidor de SGLT-2)</td>
+                    <td class="hba1c">2.0-2.8%</td>
+                    <td>Redução potente de peso e glicemia; benefícios cardiovasculares combinados; preferência por tratamento oral</td>
+                    <td>História de pancreatite; carcinoma medular da tireoide; insuficiência renal grave</td>
+                    <td>Efeitos GI (náusea, vômito); infecções genitais; hipotensão</td>
+                    <td>Combinação potente totalmente oral; benefícios cardiovasculares sinérgicos; tomar semaglutida oral em jejum</td>
+                </tr>
+                
+                <!-- Inibidor dual -->
+                <tr>
+                    <td>Imeglimina (Twymeeg)</td>
+                    <td class="med-class">Inibidor dual</td>
+                    <td class="hba1c">0.5-1.0%</td>
+                    <td>Atua tanto na resistência à insulina quanto na secreção; inibidor mitocondrial</td>
+                    <td>Insuficiência hepática grave; cetoacidose diabética</td>
+                    <td>Hipoglicemia (rara); efeitos GI leves</td>
+                    <td>Nova classe de antidiabéticos; mecanismo de ação único envolvendo mitocôndrias; aprovado no Japão</td>
+                </tr>
+                
+                <!-- Inibidor dual -->
+                <tr>
+                    <td>LY3209590 (Basal insulin Fc)</td>
+                    <td class="med-class">Insulina</td>
+                    <td class="hba1c">1.5-3.0%</td>
+                    <td>Aplicação semanal; perfil ultra-longo; boa estabilidade</td>
+                    <td>Hipoglicemia ativa</td>
+                    <td>Hipoglicemia; ganho de peso</td>
+                    <td>Insulina basal experimental com aplicação semanal; em fase final de desenvolvimento clínico</td>
+                </tr>
+                
+                <!-- Medicamento para obesidade com benefício na diabetes -->
+                <tr>
+                    <td>Semaglutida 2.4mg (Wegovy)</td>
+                    <td class="med-class">Agonista de GLP-1</td>
+                    <td class="hba1c">1.5-2.5%</td>
+                    <td>Redução significativa de peso (>15%); melhora glicêmica; aprovada para obesidade</td>
+                    <td>História de pancreatite; carcinoma medular da tireoide; gravidez</td>
+                    <td>Náusea; vômito; diarreia; constipação; dor abdominal</td>
+                    <td>Dose maior que a usada para diabetes; benefícios cardiovasculares; injeção semanal SC</td>
+                </tr>
+                
+                <!-- Medicamento para obesidade com benefício na diabetes -->
+                <tr>
+                    <td>Tirzepatida 15mg (Zepbound)</td>
+                    <td class="med-class">Agonista de GLP-1 e GIP</td>
+                    <td class="hba1c">1.8-2.5%</td>
+                    <td>Redução excepcional de peso (>20%); melhora glicêmica; aprovada para obesidade</td>
+                    <td>História de pancreatite; carcinoma medular da tireoide; gravidez</td>
+                    <td>Náusea; vômito; diarreia; constipação; dor abdominal</td>
+                    <td>Dose maior que a usada para diabetes; potencial de remissão em pré-diabetes; injeção semanal SC</td>
+                </tr>
+                
+                <!-- Inibidores de SGLT-2 + Biguanida -->
+                <tr>
+                    <td>Dapagliflozina + Metformina (Xigduo XR)</td>
+                    <td class="med-class">Associação (Inibidor de SGLT-2 + Biguanida)</td>
+                    <td class="hba1c">1.5-2.0%</td>
+                    <td>Controle glicêmico insuficiente com metformina; redução de peso; controle pressórico</td>
+                    <td>Insuficiência renal grave (TFG < 45 ml/min); acidose metabólica</td>
+                    <td>Infecções genitourinárias; efeitos GI; rara cetoacidose diabética</td>
+                    <td>Benefícios cardiovasculares; melhor controle glicêmico com menos comprimidos</td>
+                </tr>
+                
+                <!-- Empagliflozina + Metformina -->
+                <tr>
+                    <td>Empagliflozina + Metformina (Synjardy, Synjardy XR)</td>
+                    <td class="med-class">Associação (Inibidor de SGLT-2 + Biguanida)</td>
+                    <td class="hba1c">1.5-2.0%</td>
+                    <td>Controle glicêmico insuficiente com metformina; benefício cardiovascular comprovado</td>
+                    <td>Insuficiência renal grave (TFG < 30 ml/min); acidose metabólica</td>
+                    <td>Infecções genitourinárias; desidratação; efeitos GI; rara cetoacidose</td>
+                    <td>Redução de mortalidade cardiovascular; versão XR de liberação prolongada permite dose única diária</td>
+                </tr>
+                
+                <!-- Canagliflozina + Metformina -->
+                <tr>
+                    <td>Canagliflozina + Metformina (Vokanamet, Invokamet XR)</td>
+                    <td class="med-class">Associação (Inibidor de SGLT-2 + Biguanida)</td>
+                    <td class="hba1c">1.5-2.0%</td>
+                    <td>Controle glicêmico insuficiente com metformina; benefício renal; redução de peso</td>
+                    <td>Insuficiência renal grave (TFG < 30 ml/min); acidose metabólica; histórico de amputação</td>
+                    <td>Infecções genitourinárias; risco aumentado de amputação; efeitos GI</td>
+                    <td>Benefícios renais comprovados; monitoramento dos pés; versão XR permite dose única diária</td>
+                </tr>
+                
+                <!-- Inibidores de SGLT-2 + Inibidores DPP-4 -->
+                <tr>
+                    <td>Dapagliflozina + Saxagliptina (Meritor, Qtern)</td>
+                    <td class="med-class">Associação (Inibidor de SGLT-2 + Inibidor de DPP-4)</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Controle glicêmico insuficiente com monoterapia; menor risco de hipoglicemia</td>
+                    <td>Insuficiência renal grave (TFG < 45 ml/min); histórico de pancreatite</td>
+                    <td>Infecções do trato urinário e genital; nasofaringite</td>
+                    <td>Complementaridade de mecanismos; menor risco de hipoglicemia que outras associações</td>
+                </tr>
+                
+                <!-- Empagliflozina + Linagliptina -->
+                <tr>
+                    <td>Empagliflozina + Linagliptina (Glyxambi)</td>
+                    <td class="med-class">Associação (Inibidor de SGLT-2 + Inibidor de DPP-4)</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Controle glicêmico insuficiente com monoterapia; menor risco de hipoglicemia; benefício CV</td>
+                    <td>Insuficiência renal grave (TFG < 30 ml/min); histórico de pancreatite</td>
+                    <td>Infecções do trato urinário e genital; nasofaringite; sintomas respiratórios superiores</td>
+                    <td>Benefícios cardiovasculares comprovados da empagliflozina; linagliptina não requer ajuste em qualquer grau de insuficiência renal</td>
+                </tr>
+                
+                <!-- Inibidores DPP-4 + Biguanida -->
+                <tr>
+                    <td>Sitagliptina + Metformina (Janumet, Janumet XR)</td>
+                    <td class="med-class">Associação (Inibidor de DPP-4 + Biguanida)</td>
+                    <td class="hba1c">1.0-1.8%</td>
+                    <td>Controle glicêmico insuficiente com metformina; baixo risco de hipoglicemia</td>
+                    <td>Insuficiência renal grave; acidose metabólica; história de pancreatite</td>
+                    <td>Efeitos GI; nasofaringite; cefaleia</td>
+                    <td>Minimiza efeitos adversos; versão XR de liberação prolongada melhora a adesão com dose única diária</td>
+                </tr>
+                
+                <!-- Vildagliptina + Metformina -->
+                <tr>
+                    <td>Vildagliptina + Metformina (Galvus Met)</td>
+                    <td class="med-class">Associação (Inibidor de DPP-4 + Biguanida)</td>
+                    <td class="hba1c">1.0-1.8%</td>
+                    <td>Controle glicêmico insuficiente com metformina; baixo risco de hipoglicemia</td>
+                    <td>Insuficiência renal grave; acidose metabólica; insuficiência hepática</td>
+                    <td>Efeitos GI; possível elevação de enzimas hepáticas; edema periférico</td>
+                    <td>Requer monitoramento hepático; eficaz em idosos; necessita duas tomadas diárias</td>
+                </tr>
+                
+                <!-- Linagliptina + Metformina -->
+                <tr>
+                    <td>Linagliptina + Metformina (Jentadueto, Jentadueto XR)</td>
+                    <td class="med-class">Associação (Inibidor de DPP-4 + Biguanida)</td>
+                    <td class="hba1c">1.0-1.7%</td>
+                    <td>Controle glicêmico insuficiente com metformina; útil em insuficiência renal moderada</td>
+                    <td>Acidose metabólica; histórico de pancreatite</td>
+                    <td>Efeitos GI; nasofaringite; tosse</td>
+                    <td>Linagliptina não requer ajuste em insuficiência renal; versão XR permite dose única diária</td>
+                </tr>
+                
+                <!-- Inibidor DPP-4 + Sulfoniluréia -->
+                <tr>
+                    <td>Linagliptina + Glimepirida</td>
+                    <td class="med-class">Associação (Inibidor de DPP-4 + Sulfoniluréia)</td>
+                    <td class="hba1c">1.0-1.5%</td>
+                    <td>Falha terapêutica com sulfoniluréia; alternativa quando metformina é contraindicada</td>
+                    <td>Insuficiência hepática grave; histórico de reações alérgicas graves</td>
+                    <td>Hipoglicemia; ganho de peso; cefaleia</td>
+                    <td>Maior risco de hipoglicemia; ajustar dose de sulfoniluréia</td>
+                </tr>
+                
+                <!-- Alogliptina + Pioglitazona -->
+                <tr>
+                    <td>Alogliptina + Pioglitazona (Oseni)</td>
+                    <td class="med-class">Associação (Inibidor de DPP-4 + Tiazolidinediona)</td>
+                    <td class="hba1c">1.0-1.7%</td>
+                    <td>Resistência à insulina pronunciada; esteatose hepática; controle inadequado com monoterapia</td>
+                    <td>Insuficiência cardíaca; insuficiência hepática; histórico de câncer de bexiga</td>
+                    <td>Retenção hídrica; ganho de peso; nasofaringite; edema</td>
+                    <td>Monitorar função hepática; evitar em pacientes com risco de insuficiência cardíaca</td>
+                </tr>
+                
+                <!-- GLP-1 + Insulina Basal -->
+                <tr>
+                    <td>Insulina Degludeca + Liraglutida (Xultophy)</td>
+                    <td class="med-class">Associação (Insulina basal + Agonista de GLP-1)</td>
+                    <td class="hba1c">1.5-2.5%</td>
+                    <td>Controle inadequado com insulina basal ou GLP-1; minimiza ganho de peso da insulina</td>
+                    <td>História pessoal/familiar de carcinoma medular da tireoide; neoplasia endócrina múltipla tipo 2</td>
+                    <td>Náusea (menor que liraglutida isolada); hipoglicemia (menor que insulina isolada)</td>
+                    <td>Menor ganho de peso e hipoglicemia que insulina isolada; sistema de aplicação simplificado em caneta única</td>
+                </tr>
+                
+                <!-- GLP-1 + Insulina Basal -->
+                <tr>
+                    <td>Insulina Glargina + Lixisenatida (Soliqua)</td>
+                    <td class="med-class">Associação (Insulina basal + Agonista de GLP-1)</td>
+                    <td class="hba1c">1.5-2.3%</td>
+                    <td>Controle inadequado com insulina basal ou GLP-1; minimiza ganho de peso da insulina</td>
+                    <td>História pessoal/familiar de carcinoma medular da tireoide; gastroparesia grave</td>
+                    <td>Náusea; hipoglicemia (menor que insulina isolada); reações no local da injeção</td>
+                    <td>Menor ganho de peso e melhor controle pós-prandial; menor risco de efeitos GI que lixisenatida isolada</td>
+                </tr>
+                
+                <!-- Insulina -->
+                <tr>
+                    <td>Insulina NPH (Humulin N, Novolin N)</td>
+                    <td class="med-class">Insulina de ação intermediária</td>
+                    <td class="hba1c">1.5-3.5%</td>
+                    <td>Deficiência severa de insulina; controle em jejum; baixo custo</td>
+                    <td>Hipoglicemia ativa</td>
+                    <td>Hipoglicemia; ganho de peso; lipodistrofia</td>
+                    <td>Necessita aplicação rigorosamente nos mesmos horários; ajuste frequente de dose</td>
+                </tr>
+                
+                <!-- Insulina Glargina -->
+                <tr>
+                    <td>Insulina Glargina (Lantus, Basaglar)</td>
+                    <td class="med-class">Análogo de insulina de ação prolongada</td>
+                    <td class="hba1c">1.5-3.5%</td>
+                    <td>Controle basal da glicemia; menor variabilidade; dose única diária</td>
+                    <td>Hipoglicemia ativa</td>
+                    <td>Hipoglicemia (menor risco que NPH); ganho de peso</td>
+                    <td>Perfil mais plano de ação; menor risco de hipoglicemia noturna</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="details-section">
+            <h2>Informações Adicionais</h2>
+            <p>A escolha do medicamento para tratamento da diabetes tipo II deve considerar múltiplos fatores, incluindo:</p>
+            <ul>
+                <li>Perfil de eficácia no controle glicêmico (redução de HbA1c)</li>
+                <li>Comorbidades do paciente (especialmente doença cardiovascular e renal)</li>
+                <li>Risco de hipoglicemia</li>
+                <li>Efeitos no peso corporal</li>
+                <li>Tolerabilidade e efeitos colaterais</li>
+                <li>Custo e acesso ao medicamento</li>
+                <li>Preferências do paciente quanto à via de administração</li>
+            </ul>
+            
+            <p>As associações medicamentosas são particularmente úteis quando a monoterapia não é suficiente para atingir as metas glicêmicas, ou quando se busca complementaridade de mecanismos de ação.</p>
+            
+            <h3>Algoritmo de Tratamento Recomendado</h3>
+            <p><strong>Primeira linha:</strong> Metformina (se não contraindicada)</p>
+            <p><strong>Segunda linha:</strong> Adicionar medicamento baseado nas características do paciente:</p>
+            <ul>
+                <li><strong>Doença cardiovascular aterosclerótica:</strong> Agonista de GLP-1 ou inibidor de SGLT-2 com benefício cardiovascular comprovado</li>
+                <li><strong>Insuficiência cardíaca:</strong> Inibidor de SGLT-2 com indicação para IC</li>
+                <li><strong>Doença renal crônica:</strong> Inibidor de SGLT-2 com benefício renal comprovado</li>
+                <li><strong>Necessidade de minimizar hipoglicemia:</strong> Inibidor de DPP-4, inibidor de SGLT-2, agonista de GLP-1, ou TZD</li>
+                <li><strong>Necessidade de minimizar ganho de peso ou promover perda de peso:</strong> Agonista de GLP-1, inibidor de SGLT-2, ou agonista dual GLP-1/GIP</li>
+                <li><strong>Custo como consideração importante:</strong> Sulfoniluréia ou TZD</li>
+            </ul>
+            <p><strong>Terceira linha:</strong> Adicionar medicamento de outra classe com mecanismo complementar</p>
+            <p><strong>Quarta linha:</strong> Considerar associações triplas e/ou introdução de insulina basal</p>
+            
+            <h3>Considerações em Populações Específicas</h3>
+            <ul>
+                <li><strong>Idosos:</strong> Preferir medicamentos com baixo risco de hipoglicemia (DPP-4i, SGLT-2i); evitar sulfoniluréias de longa duração</li>
+                <li><strong>Insuficiência renal:</strong> Linagliptina não requer ajuste; empagliflozina e dapagliflozina com benefícios renais em doses ajustadas</li>
+                <li><strong>Insuficiência hepática:</strong> Evitar pioglitazona, rosiglitazona e medicamentos metabolizados no fígado</li>
+                <li><strong>Obesidade severa:</strong> Considerar agonistas de GLP-1 em doses mais altas (semaglutida, tirzepatida) ou cirurgia bariátrica</li>
+                <li><strong>Pré-diabetes:</strong> Metformina, pioglitazona ou inibidores de SGLT-2 podem retardar a progressão</li>
+            </ul>
+            
+            <p><strong>Nota importante:</strong> Este guia é apenas uma referência. As decisões de tratamento devem ser individualizadas e realizadas por profissionais da saúde, considerando as diretrizes clínicas atualizadas e as características específicas de cada paciente.</p>
+        </div>
+        
+        <div class="reference">
+            <p>Base de conhecimento: Diretrizes da Sociedade Brasileira de Diabetes, American Diabetes Association (ADA), European Association for the Study of Diabetes (EASD), American Association of Clinical Endocrinologists (AACE) e International Diabetes Federation (IDF).</p>
+            <p>Última atualização: Março de 2025</p>
+        </div>
+    </div>
+
+    <script>
+        function filterTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+            const table = document.getElementById('medicationsTable');
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                const medicationCell = rows[i].getElementsByTagName('td')[0];
+                const classCell = rows[i].getElementsByTagName('td')[1];
+                
+                if (medicationCell && classCell) {
+                    const medicationText = medicationCell.textContent || medicationCell.innerText;
+                    const classText = classCell.textContent || classCell.innerText;
+                    
+                    const matchesSearch = medicationText.toLowerCase().indexOf(searchInput) > -1;
+                    const matchesClass = classFilter === '' || classText.indexOf(classFilter) > -1;
+                    
+                    if (matchesSearch && matchesClass) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
